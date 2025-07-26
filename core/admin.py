@@ -8,6 +8,9 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = BaseUserAdmin.fieldsets + (
         ("Role Info", {"fields": ("role",)}),
     )
+    add_fieldsets = BaseUserAdmin.add_fieldsets + (
+        ("Role Info", {"fields": ("role",)}),
+    )
     list_display = ("username", "email", "role", "is_staff")
 
 

@@ -1,3 +1,6 @@
+from .serializers import PatientSerializer
+from .models import Patient
+from rest_framework import viewsets, permissions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import viewsets
 from .models import User, Patient, RetinalImage
@@ -37,3 +40,16 @@ class PatientViewSet(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     permission_classes = [IsAuthenticated]
+
+
+class IsDoctorOrReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.is_authenticated and request.user.role == 'doctor'
+
+
+class PatientViewSet(viewsets.ModelViewSet):
+    queryset = Patient.objects.all()
+    serializer_class = PatientSerializer
+    permission_classes = [IsDoctorOrReadOnly]
